@@ -468,6 +468,7 @@ This project contains a node program `uploadToAirtable.js`, that uses the Airtab
 - getTableMetadata
 - getStudentTableId
 - insertStudent
+- fetchTable
 - run (which calls all the other functions)
 
 ### How to create your own Personal Access Token
@@ -491,7 +492,7 @@ Choose "Start from scratch"
 
 A new base called "Untitled Base" will open
 
-Click "Untiled Base" and rename it "ClassDirectory"
+Click "Untitled Base" and rename it "ClassDirectory"
 
 Copy the URL and paste into the node program.
 https://airtable.com/app1iHuo66LG7u6ph/tblvv6DdLRlTdPSRa/viwyrS9HpkpEq5tFI?blocks=hide

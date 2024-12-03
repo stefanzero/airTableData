@@ -17,6 +17,7 @@ console.log('Base ID:', baseId);
 console.log('Table ID:', tableId);
 
 const fetchTable = async (baseId, tableId, token) => {
+  console.log('fetchTable');
   let response;
   try {
     response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}`, {
@@ -28,7 +29,7 @@ const fetchTable = async (baseId, tableId, token) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    console.log(data);
+    console.log(JSON.stringify(data.records, null, 2));
     return data;
   } catch (error) {
     console.error('Error fetching table:', error);
@@ -152,8 +153,6 @@ const getTableMetadata = async (baseId, token) => {
     console.error('Error fetching table:', error);
   }
 };
-
-
 
 const getStudentTableId = (metadata) => {
   const table = metadata.tables.find((table) => table.name === 'Students');
@@ -427,12 +426,13 @@ const run = async () => {
   const tableId = getStudentTableId(metadata);
   console.log('Student TableID', tableId);
   const studentData = getStudentData();
-  studentRecords.forEach((studentRecord) => {
+  studentData.forEach(async (student) => {
     const record = {
-      fields: studentRecord,
+      fields: student,
     };
-    insertStudent(baseId, tableId, token, record);
+    await insertStudent(baseId, tableId, token, record);
   });
+  fetchTable(baseId, tableId, token);
 };
 
 run();
