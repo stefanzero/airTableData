@@ -462,6 +462,14 @@ By using Personal Access Tokens, you can securely authenticate and authorize API
 
 This project contains a node program `uploadToAirtable.js`, that uses the Airtable API to create the Students table and insert data into it.
 
+Prerequisites: node version >= 18 (which has the "fetch" function built-in)
+
+### Usage
+
+```bash
+node uploadToAirtable.js
+```
+
 ### Main functions
 
 - createStudentsTable
