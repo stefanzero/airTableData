@@ -1,23 +1,17 @@
-// const airTable = require('airtable');
+/*
+See README on instructions to create a new workspace, data base and Personal Access Token.
 
-const { kMaxLength } = require('buffer');
-
-// Cohort21 - Untitled Base
-// const airTableBaseURL =
-//   'https://airtable.com/appOtXCLx19lC2vzR/tblKLc8Y4gZJOp95q/viwTuOJaPpq1cxmSU';
-const token =
-  'patj21ucPmKJFydxq.8b07e8fea9b4b13a5ac2816bedb3deaac7faad15da0dcc9a1e1d1dc5dc8776e7';
-// ClassDirectoryRW
-// const tokenRead =
-//   'patlD40H0ecYLiONa.0ecbaf7fd264c1cacf3b2853478bd834783323aac02478acb9773f70df7cc652';
-
+Then paste them below.`
+ */
 // ClassDirectoryWorkspace: ClassDirectory
 const airTableBaseURL =
   'https://airtable.com/app1iHuo66LG7u6ph/tblvv6DdLRlTdPSRa/viwyrS9HpkpEq5tFI';
+const token =
+  'patj21ucPmKJFydxq.8b07e8fea9b4b13a5ac2816bedb3deaac7faad15da0dcc9a1e1d1dc5dc8776e7';
 
 const parts = airTableBaseURL.split('/');
 const baseId = parts[3];
-// this is the "Untitle Table"
+// this is the "Untitled Table"
 const tableId = parts[4];
 console.log('Base ID:', baseId);
 console.log('Table ID:', tableId);
@@ -229,7 +223,7 @@ const upsertStudents = async (baseId, tableId, records) => {
   console.log(JSON.stringify(upsertResponse, null, 2));
 };
 
-const getStudentRecords = () => {
+const getStudentData = () => {
   const students = [
     {
       color: 'Red',
@@ -432,7 +426,7 @@ const run = async () => {
   console.log(metadata);
   const tableId = getStudentTableId(metadata);
   console.log('Student TableID', tableId);
-  const studentRecords = getStudentRecords();
+  const studentData = getStudentData();
   studentRecords.forEach((studentRecord) => {
     const record = {
       fields: studentRecord,
