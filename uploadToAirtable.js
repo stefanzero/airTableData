@@ -159,6 +159,26 @@ const getStudentTableId = (metadata) => {
   return table.id;
 };
 
+const getStudentId = async (baseId, tableId, token, name) => {
+  //
+  const formula = `Name = '${name}'`;
+  const encodedFormula = encodeURIComponent(formula);
+  const url = `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula=${encodedFormula}`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  };
+  let response;
+  try {
+    response = await fetch(url, { headers });
+    const data = await response.json();
+    if (data && Array.isArray(data.records) && data.records.length) {
+      return data.records[0].id;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 const insertStudent = async (baseId, tableId, token, record) => {
   let response;
   try {
@@ -178,22 +198,21 @@ const insertStudent = async (baseId, tableId, token, record) => {
   }
 };
 
-const upsertStudent = async (baseId, tableId, token, record) => {
-  /*
-  Note:
-  replace = true is not supported by latest Airtable API
-  */
+const updateStudent = async (baseId, tableId, rowId, token, record) => {
   let response;
   try {
-    response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}`, {
-      method: 'PATCH',
-      replace: true,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(record),
-    });
+    response = await fetch(
+      `https://api.airtable.com/v0/${baseId}/${tableId}/${rowId}`,
+      {
+        method: 'PATCH',
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fields: record }),
+      }
+    );
     const data = await response.json();
     console.log(JSON.stringify(data, null, 2));
     return data;
@@ -215,11 +234,6 @@ const testRecord = {
     email: 'johndoe@example.com',
     briefcase: 'https://github.com/johndoe',
   },
-};
-
-const upsertStudents = async (baseId, tableId, records) => {
-  const upsertResponse = await upsertStudent();
-  console.log(JSON.stringify(upsertResponse, null, 2));
 };
 
 const getStudentData = () => {
@@ -427,12 +441,25 @@ const run = async () => {
   console.log('Student TableID', tableId);
   const studentData = getStudentData();
   studentData.forEach(async (student) => {
-    const record = {
-      fields: student,
-    };
-    await insertStudent(baseId, tableId, token, record);
+    // Check if the student is already in the table
+    const studentId = await getStudentId(baseId, tableId, token, student.name);
+    if (!studentId) {
+      const record = {
+        fields: student,
+      };
+      await insertStudent(baseId, tableId, token, record);
+    } else {
+      const updated = await updateStudent(
+        baseId,
+        tableId,
+        studentId,
+        token,
+        student
+      );
+      console.log(`Student ${student.name} exists and will be updated`);
+      console.log(updated);
+    }
   });
-  fetchTable(baseId, tableId, token);
 };
 
 run();

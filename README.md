@@ -475,9 +475,19 @@ node uploadToAirtable.js
 - createStudentsTable
 - getTableMetadata
 - getStudentTableId
+- getStudentId
 - insertStudent
+- updateStudent
 - fetchTable
 - run (which calls all the other functions)
+
+#### Ensuring that students are unique
+
+Rows (records) in Airtable are unique by their id. To ensure that
+the same student has only one row in the table, the table is queried for
+any records that match that student's name. If there is no matching record,
+a new records is inserted. If there is a matching record, that record is
+updated.
 
 ### How to create your own Personal Access Token
 
